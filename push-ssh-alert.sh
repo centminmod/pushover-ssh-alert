@@ -39,14 +39,14 @@ fi
 SSH_ALERTGEO=$(curl -4sL https://ipinfo.io/$SSH_ALERTIP/geo | sed -e 's|[{}]||' -e 's/\(^"\|"\)//g' -e 's|,||' -e 's| readme: https://ipinfo.io/missingauth||')
 
 # Prepare the message
+GET_PPID_INFO=$(ps -f -p $PPID | egrep 'root|sshd:' | xargs)
 LOGIN_USER="$(whoami)"
 HOSTNAME="$(hostname)"
 DATE_TIME="$(date '+%d-%m-%Y %H:%M:%S')"
-MESSAGE="SSH Login: ${LOGIN_USER} on ${HOSTNAME} at ${DATE_TIME} Location: ${SSH_ALERTGEO} Times: ${MYTIMES}"
+MESSAGE="SSH Login: ${LOGIN_USER} on ${HOSTNAME} at ${DATE_TIME} ${GET_PPID_INFO} Location: ${SSH_ALERTGEO} Times: ${MYTIMES}"
 TITLE="SSH Login Alert: ${LOGIN_USER} on ${HOSTNAME} at ${DATE_TIME}"
 
 # Log the attempt with additional info
-GET_PPID_INFO=$(ps -f -p $PPID)
 log_message "SSH login attempt by ${LOGIN_USER} from ${SSH_ALERTIP}. Location: ${SSH_ALERTGEO}. Times: ${MYTIMES}"
 log_message "SSH_CLIENT: $SSH_CLIENT"
 log_message "SSH_CONNECTION: $SSH_CONNECTION"
